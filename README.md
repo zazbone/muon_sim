@@ -35,8 +35,9 @@ Il est recommander d'installer le module en ajoutant le flag -e à la commande p
 .env/bin/pip install -e .
 ```
 
+(Si pas de venv)
 ```bash
-.env/bin/pip install .
+python3 -m pip install -e .
 ```
 
 **Windows**
@@ -45,6 +46,7 @@ Il est recommander d'installer le module en ajoutant le flag -e à la commande p
 .env/Scripts/pip install -e .
 ```
 
+(Si pas de venv)
 ```bash
-.env/Scripts/pip install .
+py -m pip install -e .
 ```

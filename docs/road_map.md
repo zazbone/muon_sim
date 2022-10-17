@@ -1,18 +1,18 @@
 # Identifier les v.a. correspondantes aux états initiaux de nos muons
 
-- `(x, y, z)` : paramètres d'approche, garantissent que le muon passera par ces coordonnées durant son parcours.
+- $(x_0, y_0, z_0)$ : paramètres d'approche, garantissent que le muon passera par ces coordonnées durant son parcours.
 
-- `(dx, dy, dz)` : paramètres d'impact, vecteur directeur de la trajectoire du muon.
+- $(dx, dy, dz)$ : paramètres d'impact, vecteur directeur de la trajectoire du muon.
 
 -  $E_0$ : Énergie initiale du muon (énergie à l'approche de détecteur pas à la création)
 
 # Génération des v.a.
 
-- `(x, y)` : uniforme dans le disque correspondant au sommet de la cuve. $(x - cx)^2 + (y - cy)^2 \leq R_{cuve}$
+- $(x_0, y_0)$ : uniforme dans le disque correspondant au sommet de la cuve. $(x - cx)^2 + (y - cy)^2 \leq R_{cuve}$
 
-- `z` : uniforme selon la hauteur de la cuve $z \in [h_1, h_2]$
+- $z_0$ : uniforme selon la hauteur de la cuve $z \in [h_1, h_2]$
 
-- `(dx, dy, dz)` : dépendant de $\phi$ et $\theta$ les angles d'incidence des muons. Générer via mcmc à partir de fit de données expérimentales des spectres énergétiques et angulaire des muons.
+- $(dx, dy, dz)$ : dépendant de $\phi$ et $\theta$ les angles d'incidence des muons. Générer via mcmc à partir de fit de données expérimentales des spectres énergétiques et angulaire des muons.
 
 	- $dx = cos(\theta)$
 	- $dy = sin(\theta)cos(\phi)$
@@ -22,13 +22,13 @@
 
 # Calculer la distance de parcours dans la cuve
 
-Longueur géométrique uniquement. Calcule analytique des intersections de la trajectoire du muon avec la surface de la cuve, à partir des paramètres de la trajectoire `(x, y, z)` | `(dx, dy, dz)`
+Longueur géométrique uniquement. Calcule analytique des intersections de la trajectoire du muon avec la surface de la cuve, à partir des paramètres de la trajectoire $(x_0, y_0, z_0)$ | $(dx, dy, dz)$
 
 __Méthode__ :
 
 Paramétrisation de la trajectoire avec $\lambda$.
 
-Trouver les potentielles racines des $lambda$ pour lesquels la trajectoire intersecte soit la surface du cylindre soit un des deux disques.
+Trouver les potentielles racines des $\lambda$ pour lesquels la trajectoire intersecte soit la surface du cylindre soit un des deux disques.
 
 Une fois les potentiels $\lambda_1$ $\lambda_2$ trouvé, calculer $\Delta l = (x(\lambda_2) - x(\lambda_1))^2 + (y(\lambda_2) - y(\lambda_1))^2 + (z(\lambda_2) - z(\lambda_1))^2$
 

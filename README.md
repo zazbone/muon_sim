@@ -13,9 +13,10 @@ git clone https://github.com/zazbone/muon_sim.git
 cd muon_sim
 ```
 
-### Créer un venv dédié (Optionnel)
+### Créer un venv dédié
 
 **Linux MacOs**
+
 ```bash
 python3 -m venv .env
 ```
@@ -28,25 +29,19 @@ py -m venv .env
 
 ### Installation
 
-Il est recommander d'installer le module en ajoutant le flag -e à la commande pip install
+Il est recommandé d'installer en mode développement avec [flit][flit_tutorial]
 
 **Linux MacOs**
 ```bash
-.env/bin/pip install -e .
-```
-
-(Si pas de venv)
-```bash
-python3 -m pip install -e .
+.env/bin/pip install flit
+.env/bin/python3 -m flit install -s .
 ```
 
 **Windows**
 
 ```bash
-.env/Scripts/pip install -e .
+.env/Scripts/pip install flit
+.env/Scripts/python3 -m flit install -s .
 ```
 
-(Si pas de venv)
-```bash
-py -m pip install -e .
-```
+[flit_tutorial]: https://flit.pypa.io/en/stable/index.html

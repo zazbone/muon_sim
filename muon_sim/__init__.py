@@ -1,8 +1,3 @@
-"""Monte Carlo simulation of an atmospheric muon detector"""
-
-__version__ = "0.1"
-
-
 import numpy as np
 from scipy.integrate import simpson
 

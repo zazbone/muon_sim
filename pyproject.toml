@@ -6,8 +6,13 @@ build-backend = "flit_core.buildapi"
 name = "muon_sim"
 authors = [{name = "zazbone", email = "coczaz@gmail.com"}]
 license = {file = "LICENSE"}
-classifiers = ["License :: OSI Approved :: MIT License"]
-dynamic = ["version", "description"]
+classifiers = [
+	"License :: OSI Approved :: MIT License",
+	"Private :: Do Not Upload"
+]
+version = "0.1"
+description = "Monte Carlo simulation of an atmospheric muon detector"
+readme = "README.md"
 
 dependencies = [
 	"numpy >= 1.23",

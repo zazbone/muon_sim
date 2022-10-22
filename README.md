@@ -41,7 +41,7 @@ Il est recommandé d'installer en mode développement avec [flit][flit_tutorial]
 
 ```bash
 .env/Scripts/pip install flit
-.env/Scripts/python3 -m flit install -s .
+.env/Scripts/python -m flit install -s .
 ```
 
 [flit_tutorial]: https://flit.pypa.io/en/stable/index.html

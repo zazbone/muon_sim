@@ -4,7 +4,10 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "muon_sim"
-authors = [{name = "zazbone", email = "coczaz@gmail.com"}]
+authors = [
+	{name = "zazbone", email = "coczaz@gmail.com"},
+	{name = "maya", email = ""}
+]
 license = {file = "LICENSE"}
 classifiers = [
 	"License :: OSI Approved :: MIT License",
@@ -19,6 +22,10 @@ dependencies = [
 	"matplotlib >= 3.6",
 	"scipy >= 1.9"
 ]
+
+
+[project.optional-dependencies]
+dev = ["ipykernel ~= 6.16"]
 
 [project.urls]
 Home = "https://github.com/zazbone"

@@ -6,7 +6,7 @@ build-backend = "flit_core.buildapi"
 name = "muon_sim"
 authors = [
 	{name = "zazbone", email = "coczaz@gmail.com"},
-	{name = "maya", email = ""}
+	{name = "maya", email = "lilou.guy@orange.fr"}
 ]
 license = {file = "LICENSE"}
 classifiers = [

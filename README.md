@@ -34,14 +34,14 @@ Il est recommandé d'installer en mode développement avec [flit][flit_tutorial]
 **Linux MacOs**
 ```bash
 .env/bin/pip install flit
-.env/bin/python3 -m flit install -s .
+.env/bin/python3 -m flit install -s
 ```
 
 **Windows**
 
 ```bash
 .env/Scripts/pip install flit
-.env/Scripts/python -m flit install -s .
+.env/Scripts/python -m flit install -s
 ```
 
 [flit_tutorial]: https://flit.pypa.io/en/stable/index.html

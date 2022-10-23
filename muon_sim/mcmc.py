@@ -92,7 +92,7 @@ def walk(x, nit, sigma, pdf, prior=None, keep_all=False):
     if keep_all:
         xall = np.zeros((nit, n))
     for i in range(nit):
-        step = np.random.uniform(-sigma, sigma, n)
+        step = np.random.normal(0, sigma, n)
         xp = step + xi
         # Avoid div by zero with EPS
         alpha = (pdf(xp) * prior(xp) + EPS) / (pdf(xi) * prior(xi) + EPS)

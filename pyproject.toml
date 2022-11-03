@@ -20,7 +20,7 @@ readme = "README.md"
 dependencies = [
 	"numpy >= 1.23",
 	"matplotlib >= 3.6",
-	"scipy >= 1.9"
+	"scipy >= 1.9",
 ]
 
 

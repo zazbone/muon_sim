@@ -42,16 +42,6 @@ def pdf_normed(pdf, xlim: tuple[float, float]):
         return pdf(x) / NORM * prior(x)
     return normed
 
-# TODO: remove
-def mcmc(pdf, nsample, nit, L):
-    xi = np.full(nsample, 0.5)
-    for _ in range(nit):
-        xp = np.random.uniform(-L, L, nsample) + xi
-        alpha = pdf(xp) / pdf(xi)
-        mask = np.random.uniform(0, 1, nsample) <= alpha
-        xi[mask] = xp[mask]
-    return xi
-
 
 # TODO: check spelling
 def walk(x, nit, sigma, pdf, prior=None, keep_all=False):

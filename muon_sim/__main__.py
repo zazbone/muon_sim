@@ -1,20 +1,20 @@
 from argparse import ArgumentParser
 from pathlib import Path
 
+raise NotImplementedError
 
 parser = ArgumentParser(description="Muon sim software command line interface")
 parser.add_argument(
-	"generate",
-	help="""\
+    "generate",
+    help="""\
 		Generate muons dataset with the parameters set in given config file.
 		See [config] argument
 		""",
-	type=Path
+    type=Path,
 )
 
 parser.add_argument(
-	"config",
-	help="Create default config file for the [generate] argument"
+    "config", help="Create default config file for the [generate] argument"
 )
 
 args = parser.parse_args()

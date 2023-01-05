@@ -1,13 +1,39 @@
 from ward import test, skip
 import numpy as np
+from numpy.random import random, uniform
 from numpy.testing import assert_allclose
+from muon_sim.geometry import Disc, Vector, Ray
+from muon_sim.mcmc import random_circle
 
-@skip("not implemented yet")
+
+@test("Vector transformations")
+def _():
+    N = 10
+    vec = Vector(random(N), random(N), random(N))
+    a = Vector(random(N), random(N), random(N))
+    theta = uniform(0, 2 * np.pi, N)
+    phi = uniform(0 + 0.1, np.pi - 0.1, N)
+    vecp = vec.roty(phi).rotz(theta).translate(a)
+    vecp = vecp.translate(-a).rotz(-theta).roty(-phi)
+    assert(np.all(vecp.isclose(vec)))
+    
 @test("test intersection with disc")
 def _():
-    pass
+    N = 10
+    disc = Disc(1)
+    a = Vector(0.2, 0.8, -0.5)
+    theta = -0.3
+    phi = 1.2
+    disc.origin = disc.origin.translate(a)
+    disc.normal = disc.normal.roty(phi).rotz(theta)
 
-@skip("not implemented yet")
+    r0 = Vector(*random_circle(N, 0.8), 0.1).translate(a)
+    d = Vector(np.zeros(N), np.zeros(N), -np.ones(N)).roty(phi).rotz(theta)
+    raygood = Ray(r0, d)
+
+    _, invalid = disc.ray_intersec(raygood)
+    assert(not np.any(invalid))
+
 @test("test intersection with cylinder")
 def _():
     pass

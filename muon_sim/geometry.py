@@ -13,80 +13,55 @@ class Vector:
     @classmethod
     def zero(cls):
         return cls(0, 0, 0)
-     
+
     def euler_angle(self):
-        r = np.sqrt(
-            np.power(self.x, 2) + np.power(self.y, 2) + np.power(self.z, 2)
-        )
+        r = np.sqrt(np.power(self.x, 2) + np.power(self.y, 2) + np.power(self.z, 2))
         dx = self.x / r
         dz = self.z / r
         phi = np.arccos(dz)
-        theta = np.where(
-            np.sin(phi) == 0,
-            np.arccos(dx / np.sin(phi)),
-            0
-        )
+        theta = np.where(np.sin(phi) == 0, np.arccos(dx / np.sin(phi)), 0)
         return theta, phi
-    
+
     def translate(self, a):
-        return Vector(
-            self.x + a.x,
-            self.y + a.y,
-            self.z + a.z
-        )
-    
+        return Vector(self.x + a.x, self.y + a.y, self.z + a.z)
+
     def roty(self, phi):
         cs = np.cos(phi)
         ss = np.sin(phi)
-        return Vector(
-            self.x * cs + self.z * ss,
-            self.y,
-            -self.x * ss + self.z * cs
-        )
-    
+        return Vector(self.x * cs + self.z * ss, self.y, -self.x * ss + self.z * cs)
+
     def rotz(self, theta):
         cs = np.cos(theta)
         ss = np.sin(theta)
-        return Vector(
-            self.x * cs - self.y * ss,
-            self.x * ss + self.y * cs,
-            self.z
-        )
-    
+        return Vector(self.x * cs - self.y * ss, self.x * ss + self.y * cs, self.z)
+
     def isclose(self, other):
         tx = np.isclose(self.x, other.x)
         ty = np.logical_and(tx, np.isclose(self.y, other.y))
         return np.logical_and(ty, np.isclose(self.z, other.z))
 
+
 class Ray:
     def __init__(self, origin: Vector, direction: Vector):
         self.r0 = origin
         self.dir = direction
-    
+
     def translate(self, a: Vector):
-        return Ray(
-            self.r0.translate(a),
-            self.dir
-        )
-    
+        return Ray(self.r0.translate(a), self.dir)
+
     def roty(self, phi):
-        return Ray(
-            self.r0,
-            self.dir.roty(phi)
-        )
-    
+        return Ray(self.r0, self.dir.roty(phi))
+
     def rotz(self, theta):
-        return Ray(
-            self.r0,
-            self.dir.rotz(theta)
-        )
-    
+        return Ray(self.r0, self.dir.rotz(theta))
+
     def get_pos(self, lamb):
         return Vector(
             self.r0.x + lamb * self.dir.x,
             self.r0.y + lamb * self.dir.y,
-            self.r0.z + lamb * self.dir.z
+            self.r0.z + lamb * self.dir.z,
         )
+
 
 class Disc:
     def __init__(self, radius, origin=None, normal=None):
@@ -102,17 +77,14 @@ class Disc:
         theta, phi = self.normal.euler_angle()
         ray = ray.translate(-self.origin).rotz(-theta).roty(-phi)
         invalid = np.isclose(ray.dir.z, 0)
-        lamb = np.where(
-            invalid,
-            0,
-            -ray.r0.z / ray.dir.z
-        )
+        lamb = np.where(invalid, 0, -ray.r0.z / ray.dir.z)
         intersec = ray.get_pos(lamb)
         r = np.sqrt(np.power(intersec.x, 2) + np.power(intersec.y, 2))
         print(intersec.z)
         print(r)
         invalid = np.logical_or(invalid, r > self.radius)
         return lamb, invalid
+
 
 class Cylinder:
     def __init__(self, radius, height, origin=None, orientation=None):

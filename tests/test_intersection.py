@@ -15,8 +15,9 @@ def _():
     phi = uniform(0 + 0.1, np.pi - 0.1, N)
     vecp = vec.roty(phi).rotz(theta).translate(a)
     vecp = vecp.translate(-a).rotz(-theta).roty(-phi)
-    assert(np.all(vecp.isclose(vec)))
-    
+    assert np.all(vecp.isclose(vec))
+
+
 @test("test intersection with disc")
 def _():
     N = 10
@@ -32,16 +33,19 @@ def _():
     raygood = Ray(r0, d)
 
     _, invalid = disc.ray_intersec(raygood)
-    assert(not np.any(invalid))
+    assert not np.any(invalid)
+
 
 @test("test intersection with cylinder")
 def _():
     pass
 
+
 @skip("not implemented yet")
 @test("test validity condition")
 def _():
     pass
+
 
 @skip("not implemented yet")
 @test("test full geometry")

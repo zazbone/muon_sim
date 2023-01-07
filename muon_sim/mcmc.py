@@ -8,7 +8,7 @@ EPS = np.finfo(float).eps
 def random_circle(N, R, C=(0, 0)):
     """
     Generate N points uniformly distributed within a circle of radius R centered at C.
-    
+
     Parameters
     ----------
     N: (int)
@@ -17,7 +17,7 @@ def random_circle(N, R, C=(0, 0)):
         The radius of the circle.
     C: (tuple)
         The coordinates of the center of the circle. Default is (0, 0).
-    
+
     Returns
     -------
     x: (ndarray)
@@ -30,7 +30,6 @@ def random_circle(N, R, C=(0, 0)):
     x = r * np.cos(theta) + C[0]
     y = r * np.sin(theta) + C[1]
     return x, y
-
 
 
 def pdf_normed(pdf, xlim: tuple[float, float]):
@@ -135,6 +134,7 @@ def pdf_normed2D(pdf, xlim, ylim):
         Normalized pdf
     """
     pass
+
 
 def walk2D(x, y, nit, sigma, pdf, prior=None, keep_all=False):
     """Walker for 2D random variables distribution

@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Datasets
+*.parquet
+*.pq
+
 # C extensions
 *.so
 
@@ -160,4 +164,4 @@ cython_debug/
 .idea/
 
 # VsCode
-.vscode
+.vscode/

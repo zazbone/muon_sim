@@ -1,38 +1,46 @@
 import numpy as np
 from muon_sim import mcmc
-import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 
 class MuonSampler:
+    NWALKERS = 2**14
+    PHI_LIM = (np.pi - np.pi / 2, np.pi)
+
     def __init__(self, center, radius, zlim, Elim):
         self.circle = (center, radius)
         self.zlim = zlim
         self.Elim = Elim
 
-        self.pdf_theta = mcmc.pdf_normed(lambda x: np.power(np.cos(x), 1.9) , (0, np.pi / 2))
-        self.sampler_theta = MCMCSampler(self.pdf_theta, (0, np.pi / 2), 2**7)
-    
-    def save_to(self, path, nevent, mode="a"):
-        x, y = mcmc.random_circle(nevent, self.circle[1], self.circle[0])
-        if nevent > 2 ** 7:
-            theta = self.sampler_theta.sample((nevent % 2 ** 7) + 1)
-        else:
-            theta = self.sampler_theta.sample(1)
-        theta = theta.flatten()[0:nevent]
-        df = pd.DataFrame(
-            {
-                "x0": x,
-                "y0": y,
-                "z0": np.random.uniform(*self.zlim, nevent),
-                "E": np.random.uniform(*self.Elim, nevent),
-                "phi": np.random.uniform(0, 2 * np.pi, nevent),
-                "theta": theta
-            }
+        self.pdf_theta = mcmc.pdf_normed(
+            lambda x: np.power(np.abs(np.cos(x + np.pi)), 1.9), MuonSampler.PHI_LIM
         )
-        df["dx"] = np.cos(df["theta"]) * np.sin(df["phi"])
-        df["dy"] = np.cos(df["theta"]) * np.sin(df["phi"])
-        df["dz"] = np.cos(df["theta"]) * np.sin(df["phi"])
-        
+        self.sampler_theta = MCMCSampler(
+            self.pdf_theta, MuonSampler.PHI_LIM, MuonSampler.NWALKERS
+        )
+
+    def save_to(self, nevent, file_path):
+        x, y = mcmc.random_circle(nevent, self.circle[1], self.circle[0])
+        z = np.random.uniform(*self.zlim, nevent)
+        E = np.random.uniform(*self.Elim, nevent)
+        theta = np.random.uniform(0, 2 * np.pi, nevent)
+        if nevent > MuonSampler.NWALKERS:
+            phi = self.sampler_theta.sample((nevent // MuonSampler.NWALKERS) + 1)
+        else:
+            phi = self.sampler_theta.sample(1)
+        phi = phi.flatten()[0:nevent]
+
+        # TODO: decomposition à vérifier
+        dx = np.cos(theta) * np.sin(phi)
+        dy = np.sin(theta) * np.sin(phi)
+        dz = np.cos(phi)
+        tab = pa.table(
+            [x, y, z, E, theta, phi, dx, dy, dz],
+            names=["x0", "y0", "z0", "E", "theta", "phi", "dx", "dy", "dz"],
+        )
+        pq.write_table(tab, file_path)
+
 
 class MCMCSampler:
     def __init__(self, pdf, lim, nwalkers):
@@ -55,7 +63,7 @@ class MCMCSampler:
         self.pdf = mcmc.pdf_normed(pdf, lim)
         self.walkers = np.random.uniform(*lim, nwalkers)
         self.sigma = (lim[1] - lim[0]) / 20
-        try :
+        try:
             self.sigma = self.fit_sigma()  # First fit before convergence
         except RuntimeError:
             pass

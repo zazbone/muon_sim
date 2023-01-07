@@ -87,7 +87,9 @@ class Disc:
 
 
 class Cylinder:
-    def __init__(self, radius, height, origin=None, orientation=None):
+    def __init__(
+        self, radius, height, origin: Vector = None, orientation: Vector = None
+    ):
         self.radius = radius
         self.height = height
         if orientation is None:
@@ -95,9 +97,20 @@ class Cylinder:
         self.orientation = orientation
         if origin is None:
             origin = Vector.zero()
-        self.x0 = origin.x
-        self.y0 = origin.y
-        self.z0 = origin.z
+        self.origin = origin
 
-    def ray_intersec(self, ray):
-        pass
+    def ray_intersec(self, ray: Ray):
+        theta, phi = self.orientation.euler_angle()
+        ray = ray.translate(-self.origin).rotz(-theta).roty(-phi)
+        r = np.sqrt(np.power(ray.r0.x, 2) + np.power(ray.r0.y, 2))
+        invalid = np.logical_and(np.isclose(r, self.radius), np.isclose(ray.dir.z, 0))
+        a = np.power(ray.dir.x, 2) + np.power(ray.dir.y, 2)
+        b = 2 * (ray.r0.x * ray.dir.x + ray.r0.y * ray.dir.y)
+        c = r - self.radius
+        delta = np.power(b, 2) - 4 * a * c
+        invalid = np.logical_or(invalid, delta < 0)
+        nhit = invalid * (2 - np.isclose(delta, 0))
+        lambda0 = np.where(nhit == 1, -b / (2 * a), 0)
+        lambdap = np.where(nhit == 2, (-b + np.sqrt(delta)) / (2 * a), 0)
+        lambdam = np.where(nhit == 2, (-b - np.sqrt(delta)) / (2 * a), 0)
+        return nhit, lambda0, lambdap, lambdam, invalid

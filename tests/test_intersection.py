@@ -2,7 +2,7 @@ from ward import test, skip
 import numpy as np
 from numpy.random import random, uniform
 from numpy.testing import assert_allclose
-from muon_sim.geometry import Disc, Vector, Ray
+from muon_sim.geometry import Disc, Vector, Ray, Cylinder
 from muon_sim.mcmc import random_circle
 
 
@@ -38,7 +38,14 @@ def _():
 
 @test("test intersection with cylinder")
 def _():
-    pass
+    N = 10
+    cyl = Cylinder(0.4, 0.6, Vector(0, 0, 0), Vector(0, 0, 1))
+    r0 = Vector(*random_circle(N, 20), np.zeros(N))
+    d = -r0  # Sould all converge throug the cylinder
+    raygood = Ray(r0, d)
+
+    *_, invalid = cyl.ray_intersec(raygood)
+    assert not np.any(invalid)
 
 
 @skip("not implemented yet")

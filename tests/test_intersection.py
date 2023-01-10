@@ -44,8 +44,13 @@ def _():
     d = -r0  # Sould all converge throug the cylinder
     raygood = Ray(r0, d)
 
-    *_, invalid = cyl.ray_intersec(raygood)
-    assert not np.any(invalid)
+    *_, valid = cyl.ray_intersec(raygood)
+    assert np.all(valid)
+
+    r0 = Vector(r0.x, r0.y, r0.z + 10)
+    raybad = Ray(r0, d)
+    *_, valid = cyl.ray_intersec(raybad)
+    assert not np.any(valid)
 
 
 @skip("not implemented yet")

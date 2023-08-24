@@ -1,10 +1,12 @@
 import numpy as np
-from scipy.integrate import quad, dblquad
+import numba as nb
+from scipy.integrate import quad
 
 
 EPS = np.finfo(float).eps
 
 
+nb.njit(parallel=True)
 def random_circle(N, R, C=(0, 0)):
     """
     Generate N points uniformly distributed within a circle of radius R centered at C.
@@ -53,16 +55,19 @@ def pdf_normed(pdf, xlim: tuple[float, float]):
     """
     NORM, _err = quad(pdf, *xlim)
 
+    @nb.njit(parallel=True)
     def prior(x):
         mask = (xlim[0] <= x) & (x <= xlim[1])
         return np.where(mask, 1, EPS)
 
+    @nb.njit(parallel=True)
     def normed(x):
         return pdf(x) / NORM * prior(x)
 
     return normed
 
 
+@nb.jit()
 def walk(x, nit, sigma, pdf, prior=None, keep_all=False):
     """
     Execute nit Markov Chain Monte Carlo (MCMC) steps on the sample x with pdf as the model for the desired distribution.
@@ -93,7 +98,9 @@ def walk(x, nit, sigma, pdf, prior=None, keep_all=False):
         Otherwise, only the final state of the walkers is returned.
     """
     if prior is None:
-        prior = lambda _: 1
+        @nb.njit(parallel=True)
+        def prior(_):
+            return 1
 
     # Fattern the sample if it have more than 1 dimension
     xi = x.flatten()
@@ -101,7 +108,7 @@ def walk(x, nit, sigma, pdf, prior=None, keep_all=False):
     if keep_all:
         xall = np.zeros((nit, n))
     for i in range(nit):
-        step = np.random.normal(0, sigma, n)
+        step = np.random.normal(0, np.abs(sigma), n)
         xp = step + xi
         # Avoid div by zero with EPS
         alpha = (pdf(xp) * prior(xp) + EPS) / (pdf(xi) * prior(xi) + EPS)

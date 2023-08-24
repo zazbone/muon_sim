@@ -2,14 +2,16 @@ import numpy as np
 from muon_sim import mcmc
 import pyarrow as pa
 import pyarrow.parquet as pq
+from muon_sim.geometry import Vector
 
 
 class MuonSampler:
     NWALKERS = 2**14
     PHI_LIM = (np.pi - np.pi / 2, np.pi)
 
-    def __init__(self, center, radius, zlim, Elim):
-        self.circle = (center, radius)
+    def __init__(self, center: Vector, radius, zlim: tuple, Elim: tuple):
+        self.center = center
+        self.radius = radius
         self.zlim = zlim
         self.Elim = Elim
 
@@ -21,7 +23,7 @@ class MuonSampler:
         )
 
     def save_to(self, nevent, file_path):
-        x, y = mcmc.random_circle(nevent, self.circle[1], self.circle[0])
+        x, y = mcmc.random_circle(nevent, self.radius, (self.center.x, self.center.y))
         z = np.random.uniform(*self.zlim, nevent)
         E = np.random.uniform(*self.Elim, nevent)
         theta = np.random.uniform(0, 2 * np.pi, nevent)

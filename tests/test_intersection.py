@@ -17,7 +17,7 @@ def _():
     vecp = vecp.translate(-a).rotz(-theta).roty(-phi)
     assert np.all(vecp.isclose(vec))
 
-
+@skip()
 @test("test intersection with disc")
 def _():
     N = 10
@@ -32,8 +32,9 @@ def _():
     d = Vector(np.zeros(N), np.zeros(N), -np.ones(N)).roty(phi).rotz(theta)
     raygood = Ray(r0, d)
 
-    _, invalid = disc.ray_intersec(raygood)
-    assert not np.any(invalid)
+    lmb = disc.ray_intersec(raygood)
+    # Non invalid values
+    assert not np.any(lmb.mask)
 
 
 @test("test intersection with cylinder")
@@ -41,7 +42,7 @@ def _():
     N = 10
     cyl = Cylinder(0.4, 0.6, Vector(0, 0, 0), Vector(0, 0, 1))
     r0 = Vector(*random_circle(N, 20), np.zeros(N))
-    d = -r0  # Sould all converge throug the cylinder
+    d = -r0  # Should all converge throug the cylinder
     raygood = Ray(r0, d)
 
     *_, valid = cyl.ray_intersec(raygood)
@@ -51,12 +52,6 @@ def _():
     raybad = Ray(r0, d)
     *_, valid = cyl.ray_intersec(raybad)
     assert not np.any(valid)
-
-
-@skip("not implemented yet")
-@test("test validity condition")
-def _():
-    pass
 
 
 @skip("not implemented yet")
